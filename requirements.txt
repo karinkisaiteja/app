@@ -1,5 +1,6 @@
-nltk
-json
-pickle
-numpy
-keras
+nltk==3.7
+numpy==1.23.5
+Keras==2.9.0
+streamlit==1.13.0
+tensorflow==2.9.1
+pickle-mixin==1.0.2
