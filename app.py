@@ -1,11 +1,13 @@
 import random
-import spacy
-from spacy.lang.en import English
+import nltk
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
 import json
 import pickle
 import numpy as np
 from keras.models import load_model
 import streamlit as st
+import os
 
 # Load the pre-trained model and other data
 model = load_model('chatbot_model.h5')
@@ -13,12 +15,15 @@ intents = json.loads(open('intents1.json').read())
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 
-# Initialize the spaCy English language model
-nlp = spacy.load("en_core_web_sm")
+# Create the NLTK data directory if it doesn't exist
+nltk.data.path.append('./nltk_data')
+if 'punkt' not in os.listdir('./nltk_data'):
+    nltk.download('punkt', download_dir='./nltk_data')
 
 def clean_up_sentence(sentence):
-    doc = nlp(sentence)
-    sentence_words = [token.lemma_.lower() for token in doc]
+    nltk.data.path.append('./nltk_data')
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
     return sentence_words
 
 def bow(sentence, words):
