@@ -1,0 +1,5 @@
+nltk
+json
+pickle
+numpy
+keras
