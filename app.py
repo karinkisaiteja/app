@@ -1,7 +1,6 @@
 import random
-import nltk
-from nltk.stem import WordNetLemmatizer
-lemmatizer = WordNetLemmatizer()
+import spacy
+from spacy.lang.en import English
 import json
 import pickle
 import numpy as np
@@ -13,10 +12,13 @@ model = load_model('chatbot_model.h5')
 intents = json.loads(open('intents1.json').read())
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
-nltk.download('punkt')
+
+# Initialize the spaCy English language model
+nlp = spacy.load("en_core_web_sm")
+
 def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
+    doc = nlp(sentence)
+    sentence_words = [token.lemma_.lower() for token in doc]
     return sentence_words
 
 def bow(sentence, words):
@@ -56,5 +58,5 @@ def main():
         res = get_response(ints, intents)
         st.write("Bot: " + res)
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     main()
