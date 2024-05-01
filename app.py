@@ -19,7 +19,6 @@ classes = pickle.load(open('classes.pkl', 'rb'))
 nltk.data.path.append(os.path.join(os.getcwd(), 'nltk_data'))
 
 def clean_up_sentence(sentence):
-    nltk.data.path.append('./nltk_data')
     sentence_words = nltk.word_tokenize(sentence)
     sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
     return sentence_words
