@@ -15,8 +15,29 @@ intents = json.loads(open('intents1.json').read())
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 
-#loading the required nltk wordnet and punkt files
-nltk.data.path.append(os.path.join(os.getcwd(), 'nltk_data'))
+# Get the current working directory
+cwd = os.path.dirname(os.path.abspath(__file__))
+
+# Path to the nltk_data directory
+nltk_data_path = os.path.join(cwd, 'nltk_data')
+
+def unzip_nltk_data(nltk_data_path):
+    wordnet_zip_path = os.path.join(nltk_data_path, 'corpora', 'wordnet.zip')
+    punkt_zip_path = os.path.join(nltk_data_path, 'tokenizers', 'punkt.zip')
+
+    if not os.path.exists(os.path.join(nltk_data_path, 'wordnet')):
+        with zipfile.ZipFile(wordnet_zip_path, 'r') as zip_ref:
+            zip_ref.extractall(nltk_data_path)
+
+    if not os.path.exists(os.path.join(nltk_data_path, 'punkt')):
+        with zipfile.ZipFile(punkt_zip_path, 'r') as zip_ref:
+            zip_ref.extractall(nltk_data_path)
+
+# Unzip the WordNet and Punkt data files
+unzip_nltk_data(nltk_data_path)
+
+# Add the path to the NLTK data
+nltk.data.path.append(nltk_data_path)
 
 def clean_up_sentence(sentence):
     sentence_words = nltk.word_tokenize(sentence)
