@@ -15,10 +15,8 @@ intents = json.loads(open('intents1.json').read())
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 
-# Create the NLTK data directory if it doesn't exist
-nltk.data.path.append('./nltk_data')
-if 'punkt' not in os.listdir('./nltk_data'):
-    nltk.download('punkt', download_dir='./nltk_data')
+#loading the required nltk wordnet and punkt files
+nltk.data.path.append(os.path.join(os.getcwd(), 'nltk_data'))
 
 def clean_up_sentence(sentence):
     nltk.data.path.append('./nltk_data')
