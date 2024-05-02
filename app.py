@@ -1,24 +1,14 @@
 import random
 import nltk
-from nltk.data import Data
-
-# Load the NLTK data from your GitHub repository
-nltk_data_path = nltk.data.find('.')
-data = Data(nltk_data_path)
-
-# Load the Punkt tokenizer and WordNet corpus
-punkt = data.load('tokenizers/punkt/english.pickle')
-wordnet = data.load('corpora/wordnet.zip/wordnet/')
-
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
-
 import json
 import pickle
+
 import numpy as np
 from keras.models import load_model
+
 import streamlit as st
-import os
 
 # Load the pre-trained model and other data
 model = load_model('chatbot_model.h5')
@@ -27,8 +17,8 @@ words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 
 def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence, tokenizer=punkt)
-    sentence_words = [lemmatizer.lemmatize(word.lower(), pos='v', wordnet=wordnet) for word in sentence_words]
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
     return sentence_words
 
 def bow(sentence, words):
@@ -62,11 +52,13 @@ def get_response(ints, intents_json):
 
 def main():
     st.title("Chatbot")
-    user_message = st.text_input("You: ", "")
-    if user_message:
+
+    user_message = st.text_input("Enter your message")
+
+    if st.button("Send"):
         ints = predict_class(user_message, model)
         res = get_response(ints, intents)
-        st.write("Bot: " + res)
+        st.write(res)
 
 if __name__ == '__main__':
     main()
