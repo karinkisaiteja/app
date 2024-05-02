@@ -1,9 +1,18 @@
 import random
 import nltk
-nltk.download('punkt')
-nltk.download('wordnet')
+from nltk.data import Data
+
+# Load the NLTK data from your GitHub repository
+nltk_data_path = nltk.data.find('.')
+data = Data(nltk_data_path)
+
+# Load the Punkt tokenizer and WordNet corpus
+punkt = data.load('tokenizers/punkt/english.pickle')
+wordnet = data.load('corpora/wordnet.zip/wordnet/')
+
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
+
 import json
 import pickle
 import numpy as np
@@ -17,11 +26,9 @@ intents = json.loads(open('intents1.json').read())
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 
-
-
 def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
+    sentence_words = nltk.word_tokenize(sentence, tokenizer=punkt)
+    sentence_words = [lemmatizer.lemmatize(word.lower(), pos='v', wordnet=wordnet) for word in sentence_words]
     return sentence_words
 
 def bow(sentence, words):
